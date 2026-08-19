@@ -1,0 +1,2 @@
+# Generalized_Multimodal_Foundation_Model
+Preprint of Generalized Multimodal Foundation Model
