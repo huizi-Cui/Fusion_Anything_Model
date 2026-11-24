@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.venv/
+venv/
+
+# Model weights & external encoders (do not commit large binaries)
+/checkpoints/
+/models/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+
+# Data & outputs
+/docs/
+outputs/
+data/
+datasets/*/raw/
+datasets/*/processed/
+datasets/*/.downloads/
+*.tar.gz
+*.zip
+
+# OS
+.DS_Store

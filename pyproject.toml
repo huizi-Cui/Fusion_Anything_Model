@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fusion-anything"
+version = "0.1.0"
+description = "Fusion Anything Model (FAM): Multimodal In-Context Classification Foundation Model"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.1",
+    "torchvision",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pandas>=2.0",
+    "scikit-learn>=1.4",
+    "pydantic>=2.0",
+    "typing-extensions>=4.8",
+    "pillow>=10.0",
+    "transformers>=4.40",
+    "huggingface-hub>=0.23",
+]
+
+[project.urls]
+Homepage = "https://github.com/huizi-Cui/Fusion_Anything_Model"
+Repository = "https://github.com/huizi-Cui/Fusion_Anything_Model"
+
+[tool.setuptools.packages.find]
+include = ["fusion_anything*"]
+
+[tool.setuptools.package-data]
+"fusion_anything" = [
+    "vendor/tabpfn_runtime/LICENSE",
+    "vendor/tabpfn_runtime/src/tabpfn/**/*.py",
+]
