@@ -5,7 +5,8 @@
 <h2 align="center">Fusion Anything: A Generalized Multimodal Foundation Model</h2>
 
 <p align="center">
-  Huizi Cui<sup>1,&dagger;</sup>, Zongbo Han<sup>2,&dagger;,&ddagger;</sup>, Chenggong Ding<sup>1</sup>, Naichuan Xiao<sup>1</sup>, Jialong Yang<sup>1</sup>, Jingdong Chen<sup>1</sup><br>, Yafei Yang<sup>1</sup>, Guangyu Wang<sup>2</sup>, Qinghua Hu<sup>1</sup>, Changqing Zhang<sup>1,*</sup>
+Huizi Cui<sup>1,&dagger;</sup>, Zongbo Han<sup>2,&dagger;,&ddagger;</sup>, Chenggong Ding<sup>1</sup>, Naichuan Xiao<sup>1</sup>, Jialong Yang<sup>1</sup>, Jingdong Chen<sup>1</sup>, Yafei Yang<sup>1</sup><br>
+Guangyu Wang<sup>2</sup>, Qinghua Hu<sup>1</sup>, Changqing Zhang<sup>1,*</sup>
 </p>
 
 <p align="center">
