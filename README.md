@@ -20,8 +20,6 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg" alt="License" /></a>
 </p>
 
----
-
 ## Overview
 
 Making predictions with multimodal data is widely used in diverse scenarios. Existing multimodal fusion models, once deployed, can only handle predefined modalities (e.g., vision, text, and audio) and a single task, making it difficult to quickly adapt to new downstream applications. Therefore, a natural yet ambitious question arises—whether there exists a general multimodal fusion model that can be applied to arbitrary modality combinations and arbitrary prediction tasks. We argue that a unified multimodal fusion model should not depend on specific modalities and should instead encode transferable patterns of multimodal correlation.To this end, we propose a simple and effective learning paradigm based on training on large-scale synthetic multimodal datasets generated with **Structural Multimodal Causal Models (SMCMs)**, which formally characterize the generative processes of real-world multimodal data. Building on this framework, we propose the **Fusion Anything Model (FAM)**, a foundation model for generalized multimodal data fusion. By constructing large-scale synthetic multimodal data with diverse correlation patterns, FAM encodes transferable multimodal correlations during training and activates appropriate associations through in-context examples during inference—predicting query class probabilities in a **single forward pass** with no task-specific adaptation. Extensive experiments over **20 real-world datasets spanning 11 modalities** demonstrate that FAM achieves competitive performance with specialized models without task-specific adaptation.
