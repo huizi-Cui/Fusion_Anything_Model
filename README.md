@@ -32,8 +32,6 @@ Making predictions with multimodal data is widely used in diverse scenarios. Exi
   <img src="asset/b.png" alt="FAM in-context multimodal inference architecture" width="92%" />
 </p>
 
----
-
 ## Installation
 
 > **Requirements:** Linux, Python 3.10+ (tested on Python 3.13), and an **NVIDIA GPU** with CUDA.
@@ -50,8 +48,6 @@ pip install -e .
 ```
 
 For exact benchmark reproduction, install the pinned environment via `pip install -r requirements.txt && pip install -e . --no-deps`.
-
----
 
 ## Available Model
 
@@ -72,8 +68,6 @@ You can also store the file elsewhere and specify it via `FAM_CHECKPOINT` or the
 export FAM_CHECKPOINT=/path/to/FAM.pt
 ```
 
----
-
 ## Inference
 
 Performance of FAM against specialized multimodal fusion baselines across real-world benchmarks:
@@ -81,8 +75,6 @@ Performance of FAM against specialized multimodal fusion baselines across real-w
 <p align="center">
   <img src="asset/results.png" alt="FAM inference performance across real-world multimodal benchmarks" width="92%" />
 </p>
-
----
 
 ## Quick Start
 
@@ -117,14 +109,10 @@ You can test the installation immediately with synthetic data:
 python examples/quickstart.py
 ```
 
----
-
 ## License & Acknowledgments
 
 - The Fusion Anything codebase is licensed under the **[Apache License 2.0](LICENSE)**.
 - This repo is **Built with PriorLabs-TabPFN** ([PriorLabs/TabPFN](https://github.com/PriorLabs/TabPFN), subject to the [Prior Labs License](fusion_anything/vendor/tabpfn_runtime/LICENSE)). We thank the Prior Labs researchers for generously sharing their insights, model weights, data, and code.
-
----
 
 ## Citation
 
