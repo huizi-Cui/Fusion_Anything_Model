@@ -151,6 +151,24 @@ def verify_sources(
     return {"tabpfn": tabpfn_report, "wrapper": wrapper_report}
 
 
+def load_checkpoint_state_dict(path: Path, device: Any) -> dict[str, Any]:
+    """Load the full model_state_dict from a .safetensors or legacy .pt checkpoint."""
+    path = Path(path)
+    if path.suffix == ".safetensors":
+        from safetensors.torch import load_file
+
+        # Load on CPU so any torch.device specification (e.g., "cuda" or "cuda:0")
+        # works reliably across safetensors versions; load_state_dict copies onto target device.
+        return load_file(str(path), device="cpu")
+    import torch
+
+    checkpoint = torch.load(path, map_location=device, weights_only=False)
+    state = checkpoint.get("model_state_dict")
+    if not isinstance(state, dict):
+        raise ValueError(f"Expected a model_state_dict checkpoint: {path}")
+    return state
+
+
 def checkpoint_metadata(
     *,
     path: Path,
@@ -159,24 +177,42 @@ def checkpoint_metadata(
 ) -> dict[str, Any]:
     """Validate the configured checkpoint hash, step, and rank-32 adapter contract."""
 
-    import torch
-
     if sha256_file(path) != expected_sha256:
         raise RuntimeError(f"Unexpected LoRA checkpoint hash: {path}")
-    checkpoint = torch.load(path, map_location="cpu", weights_only=False)
-    state = checkpoint.get("model_state_dict")
-    global_step = int(checkpoint.get("global_step", -1))
+    if path.suffix == ".safetensors":
+        from safetensors import safe_open
+
+        with safe_open(str(path), framework="pt", device="cpu") as handle:
+            meta = handle.metadata() or {}
+            global_step = int(meta.get("global_step", -1))
+            keys = list(handle.keys())
+            lora_keys = [key for key in keys if key.endswith(".lora_A")]
+            lora_ranks = {
+                int(handle.get_slice(key).get_shape()[0]) for key in lora_keys
+            }
+            state_dict_keys = len(keys)
+            has_state = state_dict_keys > 0
+    else:
+        import torch
+
+        checkpoint = torch.load(path, map_location="cpu", weights_only=False)
+        state = checkpoint.get("model_state_dict")
+        global_step = int(checkpoint.get("global_step", -1))
+        has_state = isinstance(state, dict)
+        lora_keys = [key for key in state if key.endswith(".lora_A")] if has_state else []
+        lora_ranks = {int(state[key].shape[0]) for key in lora_keys}
+        state_dict_keys = len(state) if has_state else 0
     if step_contract in {"fixed_12000", "fixed_13000"}:
         expected_step = 12000 if step_contract == "fixed_12000" else 13000
-        if not isinstance(state, dict) or global_step != expected_step:
+        if not has_state or global_step != expected_step:
             raise ValueError(
                 f"Expected a step-{expected_step} model_state_dict checkpoint"
             )
     else:
-        filename_match = re.search(r"step_(\d+)\.pt$", path.name)
+        filename_match = re.search(r"step_(\d+)\.(?:pt|safetensors)$", path.name)
         filename_step = int(filename_match.group(1)) if filename_match else -1
         if (
-            not isinstance(state, dict)
+            not has_state
             or global_step < 0
             or filename_step != global_step
         ):
@@ -184,18 +220,14 @@ def checkpoint_metadata(
                 "Expected a model_state_dict checkpoint whose global_step "
                 "matches its filename"
             )
-    lora_keys = [key for key in state if key.endswith(".lora_A")]
-    if (
-        len(lora_keys) != 120
-        or {int(state[key].shape[0]) for key in lora_keys} != {32}
-    ):
+    if len(lora_keys) != 120 or lora_ranks != {32}:
         raise ValueError("Unexpected LoRA tensor count or rank")
     return {
         "path": str(path.resolve()),
         "size_bytes": path.stat().st_size,
         "sha256": expected_sha256,
         "global_step": global_step,
-        "state_dict_keys": len(state),
+        "state_dict_keys": state_dict_keys,
         "lora_rank": 32,
         "lora_alpha": 64,
     }

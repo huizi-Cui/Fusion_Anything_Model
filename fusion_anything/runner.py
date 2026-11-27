@@ -29,12 +29,12 @@ from fusion_anything import inference as inference_core
 from fusion_anything.data import GroupData, load_pca_dataset, load_registry, sha256_indices
 
 DEFAULT_TABPFN_ROOT = PACKAGE_ROOT / "vendor/tabpfn_runtime"
-DEFAULT_LORA_CHECKPOINT = PROJECT_ROOT / "checkpoints/FAM.pt"
+DEFAULT_LORA_CHECKPOINT = PROJECT_ROOT / "checkpoints/FAM.safetensors"
 CHECKPOINT_ENV_VAR = "FAM_CHECKPOINT"
 HUGGINGFACE_REPO_URL = "https://huggingface.co/FusionAnything/FAMv1"
 TREATMENT = "TL12_pca48_full"
 EXPERIMENT_SEED = 42
-LORA_SHA256 = "c479255355e66144a7b70195490d243a66a92fcfa85640187d5bb5a02e9d6e33"
+LORA_SHA256 = "bb17b1629e36a19c0bded3fd9ecc508c7440f1e127df2af823f99d3b73159c5b"
 TABPFN_SOURCE_SHA256 = "38394dac86a4c9a5764b8b88832f9e27a9a062762452f5cc8bc18b9fb848ed14"
 CURRENT_WRAPPER_SHA256 = "2bb564093190d5e006aac8e5ac1786b1a160e0a4226eb0aa9c290d82d1fa02f9"
 WRAPPER_FILES = ("__init__.py", "lora.py", "projector.py", "wrapper.py")
@@ -92,8 +92,8 @@ def checkpoint_metadata(
     if not path.is_file():
         raise FileNotFoundError(
             f"FAM checkpoint not found: {path}\n"
-            f"Download 'FAM.pt' from {HUGGINGFACE_REPO_URL} "
-            f"and place it at {DEFAULT_LORA_CHECKPOINT}, pass checkpoint='/path/to/checkpoint.pt', "
+            f"Download 'FAM.safetensors' from {HUGGINGFACE_REPO_URL} "
+            f"and place it at {DEFAULT_LORA_CHECKPOINT}, pass checkpoint='/path/to/FAM.safetensors', "
             f"or set {CHECKPOINT_ENV_VAR}."
         )
     return asset_core.checkpoint_metadata(
@@ -134,8 +134,8 @@ def build_model(args: argparse.Namespace, device: Any) -> tuple[Any, dict[str, A
         max_n_classes=MAX_NUM_CLASSES,
     ).to(device)
     wrapper._ensure_cls_head(device)
-    checkpoint = torch.load(args.lora_checkpoint, map_location=device, weights_only=False)
-    wrapper.load_state_dict(checkpoint["model_state_dict"], strict=True)
+    state_dict = asset_core.load_checkpoint_state_dict(args.lora_checkpoint, device)
+    wrapper.load_state_dict(state_dict, strict=True)
     wrapper.eval()
     return wrapper, {
         **metadata,

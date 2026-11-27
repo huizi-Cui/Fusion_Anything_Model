@@ -52,19 +52,19 @@ For exact benchmark reproduction, install the pinned environment via `pip instal
 
 Model is hosted on Hugging Face:
 
-- **Checkpoint:** `FAM.pt` (13.25M parameters)
+- **Checkpoint:** `FAM.safetensors` (13.25M parameters)
 - **Download:** [FusionAnything/FAMv1](https://huggingface.co/FusionAnything/FAMv1)
 
 Download via `huggingface-cli` (or manually from the repository page) into `checkpoints/`:
 
 ```bash
-huggingface-cli download FusionAnything/FAMv1 FAM.pt --local-dir checkpoints
+huggingface-cli download FusionAnything/FAMv1 FAM.safetensors --local-dir checkpoints
 ```
 
 You can also store the file elsewhere and specify it via `FAM_CHECKPOINT` or the `checkpoint` argument:
 
 ```bash
-export FAM_CHECKPOINT=/path/to/FAM.pt
+export FAM_CHECKPOINT=/path/to/FAM.safetensors
 ```
 
 ## Inference

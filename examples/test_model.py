@@ -10,8 +10,8 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-LORA = PROJECT_ROOT / "checkpoints/FAM.pt"
-LORA_SHA256 = "c479255355e66144a7b70195490d243a66a92fcfa85640187d5bb5a02e9d6e33"
+LORA = PROJECT_ROOT / "checkpoints/FAM.safetensors"
+LORA_SHA256 = "bb17b1629e36a19c0bded3fd9ecc508c7440f1e127df2af823f99d3b73159c5b"
 
 
 EXAMPLES = {
@@ -40,7 +40,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--checkpoint", type=Path,
         default=Path(os.environ["FAM_CHECKPOINT"]).expanduser()
         if os.environ.get("FAM_CHECKPOINT") else LORA,
-        help="Path to FAM.pt (defaults to FAM_CHECKPOINT or checkpoints/)",
+        help="Path to FAM.safetensors (defaults to FAM_CHECKPOINT or checkpoints/)",
     )
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--preflight-only", action="store_true")
